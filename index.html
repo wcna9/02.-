@@ -42,10 +42,49 @@
     z-index: 1;
   }
 
+  /* villagers on the grass */
+  .villagers {
+    position: absolute;
+    left: 0; right: 0; bottom: 18px;
+    height: 72px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .villager {
+    position: absolute;
+    bottom: 0;
+    width: 56px; height: 72px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 2px 0 rgba(74,52,36,0.25));
+  }
+  .villager svg { width: 100%; height: 100%; display: block; }
+  .v-nook     { left: 8%;  animation: idleHop 1.8s steps(2) infinite; }
+  .v-isabelle { right: 10%; animation: idleHop 1.6s steps(2) infinite 0.2s; }
+  .v-player   { left: 50%; transform: translateX(-50%);
+                animation: idleHopCenter 2.0s steps(2) infinite 0.4s; }
+  @keyframes idleHop {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-3px); }
+  }
+  @keyframes idleHopCenter {
+    0%,100% { transform: translate(-50%, 0); }
+    50%     { transform: translate(-50%, -3px); }
+  }
+  /* isabelle waving arm */
+  .wave-arm {
+    transform-origin: 10px 11px;
+    animation: waveArm 1.4s ease-in-out infinite;
+  }
+  @keyframes waveArm {
+    0%,100% { transform: rotate(-10deg); }
+    50%     { transform: rotate(18deg); }
+  }
+
   .stage {
     position:relative;
     width:100%; max-width:420px;
     height:100vh;
+    height:100dvh;
     display:flex; align-items:center; justify-content:center;
     z-index: 2;
   }
@@ -420,11 +459,141 @@
   }
   .particle.white { background: #FFF8E7; }
   .particle.pink  { background: #FF8FA3; }
+
+  /* short / small mobile screens */
+  @media (max-height: 640px) {
+    .villager { width: 44px; height: 56px; }
+    .villagers { bottom: 14px; height: 56px; }
+  }
+  @media (max-height: 560px) {
+    .villagers { display: none; }
+  }
+  @media (max-width: 340px) {
+    .chest { width: 220px; height: 186px; }
+  }
 </style>
 </head>
 <body>
   <div class="clouds" id="clouds"></div>
   <div class="grass"></div>
+
+  <div class="villagers">
+    <!-- Tom Nook (너구리): brown tanuki with cream apron -->
+    <div class="villager v-nook">
+      <svg viewBox="0 0 16 20" shape-rendering="crispEdges">
+        <!-- ears -->
+        <rect x="2" y="3" width="2" height="2" fill="#3B2416"/>
+        <rect x="12" y="3" width="2" height="2" fill="#3B2416"/>
+        <!-- head -->
+        <rect x="3" y="4" width="10" height="6" fill="#8B6F47"/>
+        <rect x="3" y="5" width="2" height="4" fill="#3B2416"/>
+        <rect x="11" y="5" width="2" height="4" fill="#3B2416"/>
+        <!-- face mask (cream) -->
+        <rect x="5" y="6" width="6" height="3" fill="#F5E6C8"/>
+        <!-- eyes -->
+        <rect x="5" y="6" width="1" height="1" fill="#1A0E06"/>
+        <rect x="10" y="6" width="1" height="1" fill="#1A0E06"/>
+        <!-- nose -->
+        <rect x="7" y="8" width="2" height="1" fill="#1A0E06"/>
+        <!-- body (green apron vest) -->
+        <rect x="3" y="10" width="10" height="6" fill="#6FAE4F"/>
+        <rect x="3" y="10" width="10" height="1" fill="#4A8A2E"/>
+        <!-- apron cream panel -->
+        <rect x="5" y="12" width="6" height="3" fill="#F5E6C8"/>
+        <rect x="7" y="13" width="2" height="1" fill="#C8373E"/>
+        <!-- arms -->
+        <rect x="2" y="11" width="1" height="4" fill="#8B6F47"/>
+        <rect x="13" y="11" width="1" height="4" fill="#8B6F47"/>
+        <!-- legs -->
+        <rect x="4" y="16" width="3" height="3" fill="#3B2416"/>
+        <rect x="9" y="16" width="3" height="3" fill="#3B2416"/>
+      </svg>
+    </div>
+
+    <!-- Isabelle (여울이): yellow dog with green leaf hair -->
+    <div class="villager v-isabelle">
+      <svg viewBox="0 0 16 20" shape-rendering="crispEdges">
+        <!-- leaf on head -->
+        <rect x="7" y="1" width="2" height="1" fill="#6FAE4F"/>
+        <rect x="6" y="2" width="4" height="1" fill="#6FAE4F"/>
+        <rect x="7" y="2" width="2" height="1" fill="#8BCB68"/>
+        <!-- ears (buns) -->
+        <rect x="2" y="3" width="3" height="3" fill="#FFD84A"/>
+        <rect x="11" y="3" width="3" height="3" fill="#FFD84A"/>
+        <rect x="3" y="4" width="1" height="1" fill="#E8B820"/>
+        <rect x="12" y="4" width="1" height="1" fill="#E8B820"/>
+        <!-- head -->
+        <rect x="4" y="4" width="8" height="6" fill="#FFE680"/>
+        <rect x="4" y="4" width="8" height="1" fill="#FFD84A"/>
+        <!-- face cream -->
+        <rect x="5" y="7" width="6" height="2" fill="#FFF8E7"/>
+        <!-- eyes -->
+        <rect x="5" y="6" width="1" height="2" fill="#1A0E06"/>
+        <rect x="10" y="6" width="1" height="2" fill="#1A0E06"/>
+        <rect x="5" y="6" width="1" height="1" fill="#FFF8E7"/>
+        <rect x="10" y="6" width="1" height="1" fill="#FFF8E7"/>
+        <!-- cheeks -->
+        <rect x="4" y="8" width="1" height="1" fill="#FF8FA3"/>
+        <rect x="11" y="8" width="1" height="1" fill="#FF8FA3"/>
+        <!-- nose -->
+        <rect x="7" y="8" width="2" height="1" fill="#1A0E06"/>
+        <!-- body (white blouse + red skirt) -->
+        <rect x="4" y="10" width="8" height="3" fill="#FFF8E7"/>
+        <rect x="4" y="13" width="8" height="3" fill="#C8373E"/>
+        <rect x="4" y="13" width="8" height="1" fill="#E85D55"/>
+        <!-- collar bow -->
+        <rect x="7" y="10" width="2" height="1" fill="#FFC857"/>
+        <!-- static arm -->
+        <rect x="3" y="11" width="1" height="3" fill="#FFE680"/>
+        <!-- waving arm -->
+        <rect class="wave-arm" x="12" y="10" width="1" height="4" fill="#FFE680"/>
+        <!-- legs -->
+        <rect x="5" y="16" width="2" height="3" fill="#FFE680"/>
+        <rect x="9" y="16" width="2" height="3" fill="#FFE680"/>
+        <rect x="5" y="18" width="2" height="1" fill="#3B2416"/>
+        <rect x="9" y="18" width="2" height="1" fill="#3B2416"/>
+      </svg>
+    </div>
+
+    <!-- Player: peach face with red cap -->
+    <div class="villager v-player">
+      <svg viewBox="0 0 16 20" shape-rendering="crispEdges">
+        <!-- cap -->
+        <rect x="3" y="2" width="10" height="2" fill="#C8373E"/>
+        <rect x="4" y="1" width="8" height="1" fill="#E85D55"/>
+        <rect x="3" y="4" width="10" height="1" fill="#8B2020"/>
+        <!-- head -->
+        <rect x="4" y="5" width="8" height="5" fill="#FFD6B0"/>
+        <!-- hair sides -->
+        <rect x="3" y="5" width="1" height="3" fill="#6B3410"/>
+        <rect x="12" y="5" width="1" height="3" fill="#6B3410"/>
+        <!-- eyes -->
+        <rect x="6" y="7" width="1" height="1" fill="#1A0E06"/>
+        <rect x="9" y="7" width="1" height="1" fill="#1A0E06"/>
+        <!-- cheeks -->
+        <rect x="5" y="8" width="1" height="1" fill="#FF8FA3"/>
+        <rect x="10" y="8" width="1" height="1" fill="#FF8FA3"/>
+        <!-- mouth -->
+        <rect x="7" y="9" width="2" height="1" fill="#C8373E"/>
+        <!-- body (blue shirt) -->
+        <rect x="3" y="10" width="10" height="5" fill="#4A9BD4"/>
+        <rect x="3" y="10" width="10" height="1" fill="#2E7BB4"/>
+        <rect x="6" y="12" width="4" height="1" fill="#FFF8E7"/>
+        <!-- arms -->
+        <rect x="2" y="11" width="1" height="3" fill="#4A9BD4"/>
+        <rect x="13" y="11" width="1" height="3" fill="#4A9BD4"/>
+        <rect x="2" y="14" width="1" height="1" fill="#FFD6B0"/>
+        <rect x="13" y="14" width="1" height="1" fill="#FFD6B0"/>
+        <!-- shorts -->
+        <rect x="3" y="15" width="10" height="2" fill="#3B2416"/>
+        <!-- legs -->
+        <rect x="4" y="17" width="3" height="2" fill="#FFD6B0"/>
+        <rect x="9" y="17" width="3" height="2" fill="#FFD6B0"/>
+        <rect x="4" y="19" width="3" height="1" fill="#8B2020"/>
+        <rect x="9" y="19" width="3" height="1" fill="#8B2020"/>
+      </svg>
+    </div>
+  </div>
 
   <div class="stage" id="stage">
     <div class="circle" id="circle">
