@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>★ LEGENDARY CHEST ★</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&display=swap" rel="stylesheet">
+<title>☆ 선물상자 ☆</title>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
   html, body { height:100%; overflow:hidden; user-select:none; }
   body {
-    background: #0d0221;
-    color: #fff;
-    font-family: 'Press Start 2P', 'DotGothic16', monospace;
+    background: linear-gradient(180deg, #A8DCF0 0%, #C8E8F5 30%, #DFEFF7 52%, #B5DE82 76%, #98C96E 100%);
+    color: #4A3424;
+    font-family: 'DotGothic16', 'Press Start 2P', monospace;
     display:flex; align-items:center; justify-content:center;
     position:relative;
     touch-action: manipulation;
@@ -19,26 +19,27 @@
     image-rendering: crisp-edges;
   }
 
-  /* pixel starfield */
-  .stars { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
-  .star {
-    position:absolute; width:3px; height:3px; background:#fff;
-    animation: twinkle 2s steps(2) infinite;
+  /* clouds */
+  .clouds { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+  .cloud {
+    position:absolute;
+    left: -140px;
+    opacity: 0.92;
+    animation: drift 45s linear infinite;
   }
-  .star.gold { background:#ffcc00; }
-  @keyframes twinkle { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  @keyframes drift {
+    from { transform: translateX(0); }
+    to   { transform: translateX(calc(100vw + 280px)); }
+  }
 
-  /* scanlines */
-  .scanlines {
-    position:fixed; inset:0; pointer-events:none; z-index:100;
-    background: repeating-linear-gradient(
-      0deg,
-      rgba(0,0,0,0.25) 0px,
-      rgba(0,0,0,0.25) 2px,
-      transparent 2px,
-      transparent 4px
-    );
-    mix-blend-mode: multiply;
+  /* grass strip */
+  .grass {
+    position: absolute;
+    bottom: 0; left: 0; right: 0; height: 26px;
+    background:
+      repeating-linear-gradient(90deg, #7FB650 0 8px, #98C96E 8px 16px);
+    box-shadow: 0 -2px 0 #6A9D40, inset 0 2px 0 rgba(255,255,255,0.25);
+    z-index: 1;
   }
 
   .stage {
@@ -46,8 +47,9 @@
     width:100%; max-width:420px;
     height:100vh;
     display:flex; align-items:center; justify-content:center;
+    z-index: 2;
   }
-  .stage.shaking { animation: screenShake 0.12s steps(2) infinite; }
+  .stage.shaking  { animation: screenShake 0.12s steps(2) infinite; }
   .stage.bigShake { animation: screenShakeBig 0.08s steps(2) 6; }
   @keyframes screenShake {
     0%,100% { transform: translate(0,0); }
@@ -62,7 +64,7 @@
     80% { transform: translate(6px, 8px); }
   }
 
-  /* pixel magic circle — smooth summoning */
+  /* sparkle ring */
   .circle {
     position:absolute;
     width: 340px; height: 340px;
@@ -86,21 +88,22 @@
   @keyframes rotCW  { to { transform: rotate(360deg); } }
   @keyframes rotCCW { to { transform: rotate(-360deg); } }
   @keyframes circleBreathe {
-    0%,100% { filter: drop-shadow(0 0 10px rgba(255,204,0,0.5)); }
-    50%     { filter: drop-shadow(0 0 26px rgba(255,204,0,1)); }
+    0%,100% { filter: drop-shadow(0 0 10px rgba(255,232,128,0.6)); }
+    50%     { filter: drop-shadow(0 0 26px rgba(255,232,128,1)); }
   }
 
-  /* chest wrapper */
+  /* gift box */
   .chest {
     position:relative;
     width: 260px; height: 220px;
     cursor:pointer;
     z-index: 2;
-    animation: float 1s steps(2) infinite;
+    filter: drop-shadow(4px 6px 0 rgba(74,52,36,0.25));
+    animation: float 1.6s ease-in-out infinite;
   }
   @keyframes float {
     0%,100% { transform: translateY(0); }
-    50%     { transform: translateY(-6px); }
+    50%     { transform: translateY(-8px); }
   }
   .chest.charging { animation: chargeBounce 0.3s steps(3) infinite; }
   @keyframes chargeBounce {
@@ -117,22 +120,22 @@
   }
   .chest.hide { opacity: 0; transition: opacity 0.2s steps(2); }
 
-  /* crack light leak (1) */
+  /* crack light leak */
   .chest .crack {
     position:absolute;
     left: 12%; right: 12%;
     top: 44%;
     height: 3px;
-    background: #fff;
+    background: #FFF8E7;
     opacity: 0;
     pointer-events:none;
     z-index: 5;
     box-shadow:
-      0 0 0 2px #ffcc00,
-      0 -6px 18px 2px #ffcc00,
-      0  6px 18px 2px #ffcc00,
-      0 -12px 36px #fff,
-      0  12px 36px #fff;
+      0 0 0 2px #FFE680,
+      0 -6px 18px 2px #FFE680,
+      0  6px 18px 2px #FFE680,
+      0 -12px 36px #FFF8E7,
+      0  12px 36px #FFF8E7;
   }
   .chest.shaking .crack { animation: crackPulse 0.2s steps(2) infinite; }
   @keyframes crackPulse {
@@ -140,29 +143,29 @@
     50%     { opacity: 1; }
   }
 
-  /* freeze frame (2) */
+  /* freeze frame */
   .stage.frozen, .stage.frozen * { animation-play-state: paused !important; }
   .chest.frozen {
-    filter: brightness(1.7)
-            drop-shadow(0 0 25px #ffcc00)
-            drop-shadow(0 0 50px #fff) !important;
+    filter: brightness(1.5)
+            drop-shadow(0 0 25px #FFE680)
+            drop-shadow(0 0 50px #FFF8E7) !important;
   }
   .chest.frozen .crack {
     animation: none !important;
     opacity: 1;
     height: 6px;
     box-shadow:
-      0 0 0 3px #ffcc00,
-      0 -14px 44px 4px #ffcc00,
-      0  14px 44px 4px #ffcc00,
-      0 -28px 72px #fff,
-      0  28px 72px #fff;
+      0 0 0 3px #FFE680,
+      0 -14px 44px 4px #FFE680,
+      0  14px 44px 4px #FFE680,
+      0 -28px 72px #FFF8E7,
+      0  28px 72px #FFF8E7;
   }
 
-  /* rarity roulette (3) — tense & fast */
+  /* roulette */
   .roulette {
     position:absolute;
-    top: 18%; left: 50%;
+    top: 14%; left: 50%;
     transform: translateX(-50%) scale(0);
     opacity: 0;
     z-index: 6;
@@ -174,28 +177,29 @@
   .roulette.hide { opacity: 0; transform: translateX(-50%) scale(0.6); }
   .roulette > span {
     display: inline-block;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 18px;
+    font-family: 'DotGothic16', monospace;
+    font-size: 24px;
+    font-weight: 900;
     letter-spacing: 3px;
-    text-shadow: 3px 3px 0 #000;
+    text-shadow: 3px 3px 0 #4A3424;
     will-change: transform, color;
   }
-  .roulette > span.common    { color: #aaaaaa; }
-  .roulette > span.uncommon  { color: #4ade80; }
-  .roulette > span.rare      { color: #60a5fa; }
+  .roulette > span.common    { color: #B0A99E; }
+  .roulette > span.uncommon  { color: #7CB342; }
+  .roulette > span.rare      { color: #4FC3F7; }
   .roulette > span.epic      {
-    color: #c084fc;
-    font-size: 22px;
-    text-shadow: 3px 3px 0 #000, 0 0 18px #c084fc, 0 0 32px #c084fc;
+    color: #BA68C8;
+    font-size: 28px;
+    text-shadow: 3px 3px 0 #4A3424, 0 0 18px #BA68C8, 0 0 32px #BA68C8;
   }
   .roulette > span.legendary {
-    color: #ffcc00;
-    font-size: 28px;
+    color: #FFC857;
+    font-size: 34px;
     text-shadow:
-      3px 3px 0 #ff3355,
-      -2px -2px 0 #ff3355,
-      0 0 22px #ffcc00,
-      0 0 40px #ffcc00;
+      3px 3px 0 #4A3424,
+      -2px -2px 0 #4A3424,
+      0 0 22px #FFE680,
+      0 0 40px #FFE680;
     animation: rouletteLand 0.35s steps(3) 0.4s infinite;
   }
   @keyframes rouletteLand {
@@ -203,10 +207,10 @@
     50%     { transform: scale(1.25); }
   }
 
-  /* vignette (4) */
+  /* vignette */
   .vignette {
     position:fixed; inset:0;
-    background: radial-gradient(ellipse at center, transparent 22%, rgba(0,0,0,0.9) 90%);
+    background: radial-gradient(ellipse at center, transparent 25%, rgba(74,52,36,0.7) 92%);
     opacity: 0;
     pointer-events:none;
     z-index: 15;
@@ -217,16 +221,17 @@
 
   .chest svg { position:absolute; left:0; top:0; width:100%; height:100%; overflow:visible; }
   .lid-svg { transform-origin: 50% 56%; transition: transform 0.5s cubic-bezier(.5,-0.5,.3,1.5); }
-  .chest.open .lid-svg { transform: translateY(-20px) rotate(-12deg); }
+  .chest.open .lid-svg { transform: translateY(-30px) rotate(-14deg); }
 
-  /* exclamation mark pop */
+  /* exclamation */
   .exclaim {
-    position:absolute; top:-40px; left:50%;
+    position:absolute; top:-44px; left:50%;
     transform: translateX(-50%) scale(0);
-    font-size: 36px;
-    color: #ff3355;
-    text-shadow: 4px 4px 0 #000, -2px -2px 0 #000;
-    font-family: 'Press Start 2P', monospace;
+    font-size: 44px;
+    color: #FFC857;
+    text-shadow: 4px 4px 0 #4A3424, -2px -2px 0 #4A3424;
+    font-family: 'DotGothic16', monospace;
+    font-weight: 900;
     z-index: 5;
   }
   .exclaim.show { animation: exclaimPop 0.6s steps(3) forwards; }
@@ -238,10 +243,10 @@
   }
   .exclaim.hide { opacity: 0; }
 
-  /* flash overlay */
+  /* flash */
   .flash {
     position:fixed; inset:0;
-    background: #fff;
+    background: #FFF8E7;
     opacity: 0;
     pointer-events:none;
     z-index: 50;
@@ -249,25 +254,25 @@
   .flash.fire { animation: flashBoom 0.5s steps(4) forwards; }
   @keyframes flashBoom {
     0%   { opacity: 0; }
-    20%  { opacity: 1; }
-    60%  { opacity: 0.7; background: #ffcc00; }
+    20%  { opacity: 1; background: #FFF8E7; }
+    60%  { opacity: 0.75; background: #FFE680; }
     100% { opacity: 0; }
   }
 
-  /* burst rings */
+  /* rings */
   .ring {
     position:absolute; top:50%; left:50%;
     width: 20px; height: 20px;
-    border: 6px solid #ffcc00;
+    border: 6px solid #FFE680;
     border-radius: 0;
     transform: translate(-50%,-50%) scale(0);
     opacity: 0;
     pointer-events:none;
-    box-shadow: 0 0 0 2px #000;
+    box-shadow: 0 0 0 2px #4A3424;
   }
   .ring.fire  { animation: ringOut 1s steps(8) forwards; }
-  .ring.r2    { animation-delay: 0.1s; border-color:#fff; }
-  .ring.r3    { animation-delay: 0.2s; border-color:#ff3355; }
+  .ring.r2    { animation-delay: 0.1s; border-color: #FFF8E7; }
+  .ring.r3    { animation-delay: 0.2s; border-color: #FF8FA3; }
   @keyframes ringOut {
     0%   { transform: translate(-50%,-50%) scale(0);  opacity: 1; }
     100% { transform: translate(-50%,-50%) scale(40); opacity: 0; }
@@ -288,7 +293,7 @@
 
   .rank-wrap {
     position:relative;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
     transform: scale(0);
   }
   .result.show .rank-wrap { animation: stamp 0.6s steps(4) forwards; }
@@ -300,37 +305,41 @@
   }
 
   .rank-label {
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 4px;
-    color: #fff;
+    color: #4A3424;
     margin-bottom: 10px;
-    text-shadow: 2px 2px 0 #ff3355;
+    text-shadow: 2px 2px 0 #FFF8E7;
+    font-family: 'Press Start 2P', monospace;
   }
   .rank-name {
-    font-size: 34px;
-    color: #ffcc00;
+    font-size: 44px;
+    color: #FFC857;
     text-shadow:
-      3px 3px 0 #ff3355,
-      -2px -2px 0 #ff3355,
-      0 0 20px #ffcc00;
+      3px 3px 0 #4A3424,
+      -2px -2px 0 #4A3424,
+      0 0 22px #FFE680;
     letter-spacing: 6px;
     animation: rankGlow 0.5s steps(2) infinite;
+    font-family: 'DotGothic16', monospace;
+    font-weight: 900;
   }
   @keyframes rankGlow {
-    0%,100% { color: #ffcc00; text-shadow: 3px 3px 0 #ff3355, -2px -2px 0 #ff3355, 0 0 20px #ffcc00; }
-    50%     { color: #ffffff; text-shadow: 3px 3px 0 #ff3355, -2px -2px 0 #ff3355, 0 0 30px #fff; }
+    0%,100% { color: #FFC857; text-shadow: 3px 3px 0 #4A3424, -2px -2px 0 #4A3424, 0 0 22px #FFE680; }
+    50%     { color: #FFF8E7; text-shadow: 3px 3px 0 #4A3424, -2px -2px 0 #4A3424, 0 0 32px #FFF8E7; }
   }
 
   .qr-card {
     display: inline-block;
-    background: #fff;
-    padding: 14px;
-    border: 6px solid #ffcc00;
+    background: #FFF8E7;
+    padding: 16px;
+    border: 6px solid #FFE680;
     box-shadow:
-      0 0 0 3px #000,
-      0 0 0 9px #ffcc00,
-      0 0 0 12px #000,
-      0 0 40px rgba(255,204,0,0.8);
+      0 0 0 3px #4A3424,
+      0 0 0 9px #FFE680,
+      0 0 0 12px #4A3424,
+      8px 14px 0 12px rgba(74, 52, 36, 0.28),
+      0 0 40px rgba(255, 200, 87, 0.8);
     transform: translateY(30px);
     opacity: 0;
   }
@@ -347,74 +356,108 @@
     image-rendering: pixelated;
   }
 
+  /* button */
+  .btn-wrap {
+    margin-top: 26px;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .result.show .btn-wrap { animation: btnIn 0.4s steps(3) 0.9s forwards; }
+  @keyframes btnIn {
+    0%   { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .click-btn {
+    display: inline-block;
+    padding: 14px 28px;
+    background: #FFE680;
+    color: #4A3424;
+    font-family: 'DotGothic16', monospace;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-decoration: none;
+    border: 3px solid #4A3424;
+    box-shadow:
+      0 0 0 3px #FFE680,
+      6px 6px 0 3px #4A3424;
+    transition: transform 0.1s steps(2), box-shadow 0.1s steps(2);
+  }
+  .click-btn:active {
+    transform: translate(3px, 3px);
+    box-shadow:
+      0 0 0 3px #FFE680,
+      3px 3px 0 3px #4A3424;
+  }
+
   /* hint */
   .hint {
     position:absolute;
-    bottom: 70px; left:50%;
+    bottom: 80px; left:50%;
     transform: translateX(-50%);
-    color: #ffcc00;
-    font-size: 11px;
+    color: #4A3424;
+    font-size: 15px;
     letter-spacing: 2px;
-    text-shadow: 2px 2px 0 #000;
+    text-shadow: 2px 2px 0 #FFF8E7;
     white-space: nowrap;
     animation: blink 0.7s steps(2) infinite;
+    font-family: 'DotGothic16', monospace;
+    font-weight: 900;
   }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
   .hint.hide { display: none; }
+  .arrow { display:inline-block; animation: arrowMove 0.5s steps(2) infinite; }
+  @keyframes arrowMove { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
 
   /* pixel particles */
   .particle {
     position:fixed;
     width: 8px; height: 8px;
-    background: #ffcc00;
+    background: #FFE680;
     pointer-events:none;
     z-index: 30;
-    box-shadow: 0 0 0 2px #000;
+    box-shadow: 0 0 0 2px #4A3424;
   }
-  .particle.white { background: #fff; }
-  .particle.red { background: #ff3355; }
-
-  /* arrow hint */
-  .arrow {
-    display:inline-block;
-    animation: arrowMove 0.5s steps(2) infinite;
-  }
-  @keyframes arrowMove { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+  .particle.white { background: #FFF8E7; }
+  .particle.pink  { background: #FF8FA3; }
 </style>
 </head>
 <body>
-  <div class="stars" id="stars"></div>
+  <div class="clouds" id="clouds"></div>
+  <div class="grass"></div>
 
   <div class="stage" id="stage">
     <div class="circle" id="circle">
       <svg class="circle-outer" viewBox="0 0 100 100" shape-rendering="crispEdges">
-        <g fill="none" stroke="#ffcc00" stroke-width="0.8">
+        <g fill="none" stroke="#FFE680" stroke-width="0.8">
           <circle cx="50" cy="50" r="47"/>
-          <circle cx="50" cy="50" r="43" stroke-dasharray="1,2"/>
-          <rect x="10" y="10" width="80" height="80"/>
+          <circle cx="50" cy="50" r="43" stroke-dasharray="2,3"/>
         </g>
-        <g fill="#ffcc00">
-          <rect x="49" y="2"  width="2" height="5"/>
-          <rect x="49" y="93" width="2" height="5"/>
-          <rect x="2"  y="49" width="5" height="2"/>
-          <rect x="93" y="49" width="5" height="2"/>
-          <rect x="16" y="16" width="3" height="3"/>
-          <rect x="81" y="16" width="3" height="3"/>
-          <rect x="16" y="81" width="3" height="3"/>
-          <rect x="81" y="81" width="3" height="3"/>
+        <g fill="#FFE680">
+          <rect x="49" y="2"  width="2" height="6"/>
+          <rect x="47" y="4"  width="6" height="2"/>
+          <rect x="49" y="92" width="2" height="6"/>
+          <rect x="47" y="94" width="6" height="2"/>
+          <rect x="2"  y="49" width="6" height="2"/>
+          <rect x="4"  y="47" width="2" height="6"/>
+          <rect x="92" y="49" width="6" height="2"/>
+          <rect x="94" y="47" width="2" height="6"/>
         </g>
       </svg>
       <svg class="circle-inner" viewBox="0 0 100 100" shape-rendering="crispEdges">
-        <g fill="none" stroke="#ffcc00" stroke-width="0.8">
-          <polygon points="50,14 84,74 16,74"/>
-          <polygon points="50,86 16,26 84,26"/>
-          <circle cx="50" cy="50" r="28" stroke-dasharray="2,2"/>
+        <g fill="none" stroke="#FFE680" stroke-width="0.8">
+          <circle cx="50" cy="50" r="30" stroke-dasharray="2,2"/>
+          <circle cx="50" cy="50" r="22" stroke-dasharray="1,2"/>
         </g>
-        <g fill="#ffcc00">
-          <rect x="49" y="22" width="2" height="2"/>
-          <rect x="49" y="76" width="2" height="2"/>
-          <rect x="22" y="49" width="2" height="2"/>
-          <rect x="76" y="49" width="2" height="2"/>
+        <g fill="#FFE680">
+          <rect x="20" y="22" width="4" height="2"/>
+          <rect x="21" y="21" width="2" height="4"/>
+          <rect x="76" y="22" width="4" height="2"/>
+          <rect x="77" y="21" width="2" height="4"/>
+          <rect x="20" y="76" width="4" height="2"/>
+          <rect x="21" y="75" width="2" height="4"/>
+          <rect x="76" y="76" width="4" height="2"/>
+          <rect x="77" y="75" width="2" height="4"/>
         </g>
       </svg>
     </div>
@@ -426,48 +469,41 @@
     <div class="chest" id="chest">
       <div class="exclaim" id="exclaim">!</div>
 
-      <!-- BODY -->
+      <!-- BODY (gift box bottom) -->
       <svg viewBox="0 0 20 16" shape-rendering="crispEdges" preserveAspectRatio="xMidYMid meet">
-        <!-- shadow -->
-        <rect x="2" y="15" width="16" height="1" fill="#000" opacity="0.5"/>
-        <!-- body base -->
-        <rect x="1" y="7"  width="18" height="9" fill="#5a2808"/>
-        <rect x="2" y="8"  width="16" height="7" fill="#8b4513"/>
-        <!-- gold top trim -->
-        <rect x="1" y="7"  width="18" height="1" fill="#ffcc00"/>
-        <rect x="1" y="8"  width="18" height="1" fill="#d4a017"/>
-        <!-- gold bottom trim -->
-        <rect x="1" y="14" width="18" height="1" fill="#d4a017"/>
-        <rect x="1" y="15" width="18" height="1" fill="#ffcc00"/>
-        <!-- side gold -->
-        <rect x="1" y="7"  width="1"  height="9" fill="#ffcc00"/>
-        <rect x="18" y="7" width="1"  height="9" fill="#ffcc00"/>
-        <!-- lock (bottom half) -->
-        <rect x="9"  y="9"  width="2" height="4" fill="#000"/>
-        <rect x="9"  y="10" width="2" height="2" fill="#ffcc00"/>
-        <!-- wood planks -->
-        <rect x="5"  y="9"  width="1" height="5" fill="#5a2808"/>
-        <rect x="14" y="9"  width="1" height="5" fill="#5a2808"/>
+        <rect x="2" y="15" width="16" height="1" fill="#4A3424" opacity="0.3"/>
+        <rect x="1" y="7"  width="18" height="9" fill="#8B6F47"/>
+        <rect x="2" y="8"  width="16" height="7" fill="#FFF8E7"/>
+        <rect x="2" y="8"  width="16" height="1" fill="#FFFFFF"/>
+        <rect x="2" y="14" width="16" height="1" fill="#F0E0C0"/>
+        <!-- horizontal ribbon -->
+        <rect x="1" y="10" width="18" height="2" fill="#C8373E"/>
+        <rect x="1" y="10" width="18" height="1" fill="#E85D55"/>
+        <!-- vertical ribbon on top -->
+        <rect x="9" y="7"  width="2" height="9" fill="#C8373E"/>
+        <rect x="9" y="7"  width="1" height="9" fill="#E85D55"/>
       </svg>
 
-      <!-- LID -->
+      <!-- LID (gift box top with bow) -->
       <svg class="lid-svg" viewBox="0 0 20 16" shape-rendering="crispEdges" preserveAspectRatio="xMidYMid meet">
-        <rect x="1" y="1" width="18" height="7" fill="#5a2808"/>
-        <rect x="2" y="2" width="16" height="5" fill="#8b4513"/>
-        <!-- gold top -->
-        <rect x="2" y="1" width="16" height="1" fill="#ffcc00"/>
-        <rect x="3" y="0" width="14" height="1" fill="#ffcc00"/>
-        <!-- gold bottom of lid -->
-        <rect x="1" y="7" width="18" height="1" fill="#ffcc00"/>
-        <rect x="1" y="6" width="18" height="1" fill="#d4a017"/>
-        <!-- side gold -->
-        <rect x="1" y="1" width="1" height="7" fill="#ffcc00"/>
-        <rect x="18" y="1" width="1" height="7" fill="#ffcc00"/>
-        <!-- lock top -->
-        <rect x="9"  y="5" width="2" height="3" fill="#000"/>
-        <rect x="9"  y="6" width="2" height="1" fill="#ffcc00"/>
-        <!-- highlight -->
-        <rect x="4"  y="3" width="2" height="1" fill="#d4a017"/>
+        <rect x="1" y="2" width="18" height="6" fill="#8B6F47"/>
+        <rect x="2" y="3" width="16" height="5" fill="#FFF8E7"/>
+        <rect x="2" y="3" width="16" height="1" fill="#FFFFFF"/>
+        <rect x="17" y="3" width="1" height="5" fill="#F0E0C0"/>
+        <!-- vertical ribbon -->
+        <rect x="9" y="2" width="2" height="6" fill="#C8373E"/>
+        <rect x="9" y="2" width="1" height="6" fill="#E85D55"/>
+        <!-- bow left loop -->
+        <rect x="5" y="0" width="4" height="2" fill="#C8373E"/>
+        <rect x="5" y="0" width="4" height="1" fill="#E85D55"/>
+        <rect x="5" y="0" width="1" height="2" fill="#8B1A22"/>
+        <!-- bow right loop -->
+        <rect x="11" y="0" width="4" height="2" fill="#C8373E"/>
+        <rect x="11" y="0" width="4" height="1" fill="#E85D55"/>
+        <rect x="14" y="0" width="1" height="2" fill="#8B1A22"/>
+        <!-- bow center knot -->
+        <rect x="9" y="0" width="2" height="2" fill="#C8373E"/>
+        <rect x="9" y="0" width="1" height="2" fill="#E85D55"/>
       </svg>
 
       <div class="crack"></div>
@@ -477,44 +513,50 @@
 
     <div class="result" id="result">
       <div class="rank-wrap">
-        <div class="rank-label">★ LEGENDARY ★</div>
+        <div class="rank-label">☆ LEGENDARY ☆</div>
         <div class="rank-name">전 설</div>
       </div>
       <div class="qr-card">
         <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADIAQMAAACXljzdAAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAABAElEQVRYhd2XwQ7DMAhD4cvz57Bik7SplHs9qu7A22EWYJjZMUYizOo183Am4tsEvz2taCXDg9+QJZWD0qTS0hryBM9VL/sTUp2IosmTuxPz2KNCpJ2inug+3D1Ei6xIWsUjI0lGzppxspxyQ5VQZY2WJdKYL10y2vOAaRJ4Q5QYRPZegu1Np1AlLB3NL/p6uCfsmwT7J8nZbGuyZAmW6fVZxfFnJ8oSlg5pdpwLE47PpdXZiH0jaJIZJbXdwPd1q0WwT7MXUPYy9f0SkiJTJ6wip1LXJdRZ8zWPUVqfOuEfIF8bS56sy83zpVSKsBO7dtC596gYeTgFr7buRlFyjB8VjpjPFFwIlgAAAABJRU5ErkJggg==" alt="QR Code">
       </div>
+      <div class="btn-wrap">
+        <a class="click-btn" href="https://smore.im/form/2WtxLfGUuN" target="_blank" rel="noopener">&#9654; CLICK HERE</a>
+      </div>
     </div>
 
-    <div class="hint" id="hint"><span class="arrow">▼</span> TAP TO OPEN <span class="arrow">▼</span></div>
+    <div class="hint" id="hint"><span class="arrow">▼</span> 상자를 탭해서 열기 <span class="arrow">▼</span></div>
   </div>
 
   <div class="vignette" id="vignette"></div>
   <div class="flash" id="flash"></div>
-  <div class="scanlines"></div>
 
 <script>
-  // starfield
-  const stars = document.getElementById('stars');
-  for (let i = 0; i < 80; i++) {
-    const s = document.createElement('div');
-    s.className = 'star' + (Math.random() < 0.3 ? ' gold' : '');
-    s.style.left = Math.random() * 100 + '%';
-    s.style.top  = Math.random() * 100 + '%';
-    s.style.animationDelay = Math.random() * 2 + 's';
-    stars.appendChild(s);
+  // clouds drifting across sky
+  const cloudsEl = document.getElementById('clouds');
+  const cloudSVG = '<svg width="100%" height="100%" viewBox="0 0 40 16" shape-rendering="crispEdges" preserveAspectRatio="none"><rect x="4" y="9" width="32" height="7" fill="#fff"/><rect x="0" y="5" width="40" height="7" fill="#fff"/><rect x="10" y="0" width="20" height="7" fill="#fff"/></svg>';
+  for (let i = 0; i < 6; i++) {
+    const c = document.createElement('div');
+    c.className = 'cloud';
+    c.innerHTML = cloudSVG;
+    c.style.top = (5 + Math.random() * 38) + '%';
+    c.style.width = (80 + Math.random() * 60) + 'px';
+    c.style.height = (28 + Math.random() * 16) + 'px';
+    c.style.animationDelay = (-Math.random() * 45) + 's';
+    c.style.animationDuration = (40 + Math.random() * 20) + 's';
+    cloudsEl.appendChild(c);
   }
 
-  const stage    = document.getElementById('stage');
-  const chest    = document.getElementById('chest');
-  const circle   = document.getElementById('circle');
-  const exclaim  = document.getElementById('exclaim');
-  const flash    = document.getElementById('flash');
-  const result   = document.getElementById('result');
-  const hint     = document.getElementById('hint');
+  const stage        = document.getElementById('stage');
+  const chest        = document.getElementById('chest');
+  const circle       = document.getElementById('circle');
+  const exclaim      = document.getElementById('exclaim');
+  const flash        = document.getElementById('flash');
+  const result       = document.getElementById('result');
+  const hint         = document.getElementById('hint');
   const roulette     = document.getElementById('roulette');
   const rouletteText = document.getElementById('rouletteText');
   const vignette     = document.getElementById('vignette');
-  const rings    = [document.getElementById('ring1'), document.getElementById('ring2'), document.getElementById('ring3')];
+  const rings        = [document.getElementById('ring1'), document.getElementById('ring2'), document.getElementById('ring3')];
 
   const RANKS = [
     { name: 'COMMON',   cls: 'common'   },
@@ -539,7 +581,6 @@
       rouletteText.style.transform = `translate(${jx}px, ${jy}px) scale(${js})`;
     }
 
-    // phase A: fast random spin
     function fastTick() {
       const elapsed = performance.now() - startTime;
       if (elapsed >= fastEnd) { slowUncommon(); return; }
@@ -553,7 +594,6 @@
       rouletteTimer = setTimeout(fastTick, delay);
     }
 
-    // phase B: deterministic slowdown climbing the ranks
     function slowUncommon() {
       rouletteText.className = 'uncommon';
       rouletteText.textContent = 'UNCOMMON';
@@ -566,8 +606,6 @@
       jitter();
       rouletteTimer = setTimeout(fakeStop, 230);
     }
-
-    // phase C: FAKE STOP on EPIC — feels like this is the answer
     function fakeStop() {
       rouletteText.className = 'epic';
       rouletteText.textContent = 'EPIC';
@@ -579,8 +617,6 @@
       if (navigator.vibrate) navigator.vibrate(90);
       rouletteTimer = setTimeout(clickUp, 550);
     }
-
-    // phase D: one more click! → LEGENDARY pop
     function clickUp() {
       if (fakeAnim) fakeAnim.cancel();
       rouletteText.className = 'legendary';
@@ -605,13 +641,11 @@
     hint.classList.add('hide');
     chest.style.animation = 'none';
 
-    // phase 1 (0ms): charge + exclaim + vignette begins closing
     chest.classList.add('charging');
     exclaim.classList.add('show');
     vignette.classList.add('closing');
     if (navigator.vibrate) navigator.vibrate([30, 20, 30, 20, 30]);
 
-    // phase 2 (600ms): shake + magic circle + roulette start
     setTimeout(() => {
       chest.classList.remove('charging');
       chest.classList.add('shaking');
@@ -622,12 +656,10 @@
       if (navigator.vibrate) navigator.vibrate([60, 40, 60, 40, 80, 40, 120]);
     }, 600);
 
-    // phase 3: escalating sparks (tracking the roulette drama)
     setTimeout(() => spawnSparks(15), 1100);
     setTimeout(() => spawnSparks(18), 1500);
     setTimeout(() => spawnSparks(22), 1900);
 
-    // phase 5 (2450ms): FREEZE FRAME — just after LEGENDARY lands (~2150ms)
     setTimeout(() => {
       chest.classList.remove('shaking');
       stage.classList.remove('shaking');
@@ -635,7 +667,6 @@
       chest.classList.add('frozen');
     }, 2450);
 
-    // phase 6 (2750ms): BOOM — unfreeze + flash + open
     setTimeout(() => {
       stage.classList.remove('frozen');
       chest.classList.remove('frozen');
@@ -650,7 +681,6 @@
       if (navigator.vibrate) navigator.vibrate(500);
     }, 2750);
 
-    // phase 7 (3250ms): reveal + vignette opens
     setTimeout(() => {
       chest.classList.add('hide');
       result.classList.add('show');
@@ -667,7 +697,7 @@
     for (let i = 0; i < n; i++) {
       const p = document.createElement('div');
       const roll = Math.random();
-      p.className = 'particle' + (roll < 0.3 ? ' white' : roll < 0.5 ? ' red' : '');
+      p.className = 'particle' + (roll < 0.3 ? ' white' : roll < 0.5 ? ' pink' : '');
       p.style.left = cx + 'px';
       p.style.top  = cy + 'px';
       document.body.appendChild(p);
@@ -690,7 +720,7 @@
     for (let i = 0; i < n; i++) {
       const p = document.createElement('div');
       const roll = Math.random();
-      p.className = 'particle' + (roll < 0.3 ? ' white' : roll < 0.5 ? ' red' : '');
+      p.className = 'particle' + (roll < 0.3 ? ' white' : roll < 0.5 ? ' pink' : '');
       const size = 6 + Math.floor(Math.random() * 6);
       p.style.width  = size + 'px';
       p.style.height = size + 'px';
