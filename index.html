@@ -246,17 +246,28 @@
     50%     { transform: scale(1.25); }
   }
 
-  /* vignette */
-  .vignette {
+  /* falling petals */
+  .petals {
     position:fixed; inset:0;
-    background: radial-gradient(ellipse at center, transparent 25%, rgba(74,52,36,0.7) 92%);
-    opacity: 0;
     pointer-events:none;
+    overflow:hidden;
     z-index: 15;
-    transition: opacity 1.6s ease;
   }
-  .vignette.closing { opacity: 1; }
-  .vignette.open    { opacity: 0; transition: opacity 0.8s ease; }
+  .petal {
+    position:absolute;
+    top:-30px;
+    width:14px; height:14px;
+    will-change: transform;
+    animation: petalFall linear forwards;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 1px 0 rgba(74,52,36,0.2));
+  }
+  .petal svg { width:100%; height:100%; display:block; }
+  @keyframes petalFall {
+    0%   { transform: translate(0, -30px) rotate(0deg); }
+    50%  { transform: translate(var(--sway,0), 50vh) rotate(180deg); }
+    100% { transform: translate(0, calc(100vh + 30px)) rotate(360deg); }
+  }
 
   .chest svg { position:absolute; left:0; top:0; width:100%; height:100%; overflow:visible; }
   .lid-svg { transform-origin: 50% 56%; transition: transform 0.5s cubic-bezier(.5,-0.5,.3,1.5); }
@@ -696,7 +707,7 @@
     <div class="hint" id="hint"><span class="arrow">▼</span> 상자를 탭해서 열기 <span class="arrow">▼</span></div>
   </div>
 
-  <div class="vignette" id="vignette"></div>
+  <div class="petals" id="petals"></div>
   <div class="flash" id="flash"></div>
 
 <script>
@@ -724,7 +735,50 @@
   const hint         = document.getElementById('hint');
   const roulette     = document.getElementById('roulette');
   const rouletteText = document.getElementById('rouletteText');
-  const vignette     = document.getElementById('vignette');
+  const petalsEl     = document.getElementById('petals');
+
+  // petal rain
+  const PETAL_SVGS = [
+    '<svg viewBox="0 0 8 8" shape-rendering="crispEdges"><rect x="2" y="1" width="4" height="1" fill="#FFB5C5"/><rect x="1" y="2" width="6" height="4" fill="#FF8FA3"/><rect x="2" y="6" width="4" height="1" fill="#FFB5C5"/><rect x="3" y="3" width="2" height="2" fill="#FFD6DE"/></svg>',
+    '<svg viewBox="0 0 8 8" shape-rendering="crispEdges"><rect x="2" y="1" width="4" height="1" fill="#FFF8E7"/><rect x="1" y="2" width="6" height="4" fill="#FFE680"/><rect x="2" y="6" width="4" height="1" fill="#FFF8E7"/><rect x="3" y="3" width="2" height="2" fill="#FFF8E7"/></svg>',
+    '<svg viewBox="0 0 8 8" shape-rendering="crispEdges"><rect x="2" y="1" width="4" height="1" fill="#FFF8E7"/><rect x="1" y="2" width="6" height="4" fill="#FFF8E7"/><rect x="2" y="6" width="4" height="1" fill="#FFE680"/><rect x="3" y="3" width="2" height="2" fill="#FFD6DE"/></svg>'
+  ];
+  let petalInterval = null;
+  function spawnPetal() {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.innerHTML = PETAL_SVGS[Math.floor(Math.random() * PETAL_SVGS.length)];
+    p.style.left = (Math.random() * 100) + 'vw';
+    const size = 10 + Math.random() * 10;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.animationDuration = (4 + Math.random() * 3) + 's';
+    p.style.setProperty('--sway', (Math.random() * 80 - 40) + 'px');
+    petalsEl.appendChild(p);
+    setTimeout(() => p.remove(), 7500);
+  }
+  function startPetals() {
+    if (petalInterval) return;
+    for (let i = 0; i < 10; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      p.innerHTML = PETAL_SVGS[Math.floor(Math.random() * PETAL_SVGS.length)];
+      p.style.left = (Math.random() * 100) + 'vw';
+      const size = 10 + Math.random() * 10;
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      const dur = 4 + Math.random() * 3;
+      p.style.animationDuration = dur + 's';
+      p.style.animationDelay = (-Math.random() * dur) + 's';
+      p.style.setProperty('--sway', (Math.random() * 80 - 40) + 'px');
+      petalsEl.appendChild(p);
+      setTimeout(() => p.remove(), 7500);
+    }
+    petalInterval = setInterval(spawnPetal, 160);
+  }
+  function stopPetals() {
+    if (petalInterval) { clearInterval(petalInterval); petalInterval = null; }
+  }
   const rings        = [document.getElementById('ring1'), document.getElementById('ring2'), document.getElementById('ring3')];
 
   const RANKS = [
