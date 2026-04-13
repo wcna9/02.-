@@ -183,16 +183,20 @@
   .roulette > span.common    { color: #aaaaaa; }
   .roulette > span.uncommon  { color: #4ade80; }
   .roulette > span.rare      { color: #60a5fa; }
-  .roulette > span.epic      { color: #c084fc; }
+  .roulette > span.epic      {
+    color: #c084fc;
+    font-size: 22px;
+    text-shadow: 3px 3px 0 #000, 0 0 18px #c084fc, 0 0 32px #c084fc;
+  }
   .roulette > span.legendary {
     color: #ffcc00;
-    font-size: 26px;
+    font-size: 28px;
     text-shadow:
       3px 3px 0 #ff3355,
       -2px -2px 0 #ff3355,
       0 0 22px #ffcc00,
       0 0 40px #ffcc00;
-    animation: rouletteLand 0.35s steps(3) infinite;
+    animation: rouletteLand 0.35s steps(3) 0.4s infinite;
   }
   @keyframes rouletteLand {
     0%,100% { transform: scale(1); }
@@ -524,32 +528,75 @@
   function startRoulette(onLand) {
     roulette.classList.add('show');
     let i = 0;
+    let fakeAnim = null;
     const startTime = performance.now();
-    const duration  = 1300;
-    const tick = () => {
+    const fastEnd  = 600;
+
+    function jitter() {
+      const jx = (Math.random() - 0.5) * 12;
+      const jy = (Math.random() - 0.5) *  6;
+      const js = 0.9 + Math.random() * 0.25;
+      rouletteText.style.transform = `translate(${jx}px, ${jy}px) scale(${js})`;
+    }
+
+    // phase A: fast random spin
+    function fastTick() {
       const elapsed = performance.now() - startTime;
-      if (elapsed >= duration) {
-        rouletteText.style.transform = '';
-        rouletteText.className = 'legendary';
-        rouletteText.textContent = 'LEGENDARY';
-        if (onLand) onLand();
-        return;
-      }
-      const t = elapsed / duration;
-      // cubic ease-in: stays ~25ms for most of the spin, then snaps slow
-      const delay = 22 + Math.pow(t, 3.2) * 260;
+      if (elapsed >= fastEnd) { slowUncommon(); return; }
+      const t = elapsed / fastEnd;
+      const delay = 22 + t * 55;
       const r = RANKS[i % RANKS.length];
       rouletteText.className = r.cls;
       rouletteText.textContent = r.name;
-      // intensity jitter
-      const jx = (Math.random() - 0.5) * 12;
-      const jy = (Math.random() - 0.5) *  6;
-      const js = 0.9  + Math.random() * 0.25;
-      rouletteText.style.transform = `translate(${jx}px, ${jy}px) scale(${js})`;
+      jitter();
       i++;
-      rouletteTimer = setTimeout(tick, delay);
-    };
-    tick();
+      rouletteTimer = setTimeout(fastTick, delay);
+    }
+
+    // phase B: deterministic slowdown climbing the ranks
+    function slowUncommon() {
+      rouletteText.className = 'uncommon';
+      rouletteText.textContent = 'UNCOMMON';
+      jitter();
+      rouletteTimer = setTimeout(slowRare, 170);
+    }
+    function slowRare() {
+      rouletteText.className = 'rare';
+      rouletteText.textContent = 'RARE';
+      jitter();
+      rouletteTimer = setTimeout(fakeStop, 230);
+    }
+
+    // phase C: FAKE STOP on EPIC — feels like this is the answer
+    function fakeStop() {
+      rouletteText.className = 'epic';
+      rouletteText.textContent = 'EPIC';
+      rouletteText.style.transform = '';
+      fakeAnim = rouletteText.animate([
+        { transform: 'scale(0.7)' },
+        { transform: 'scale(1.18)' }
+      ], { duration: 220, easing: 'cubic-bezier(.2,.8,.3,1.2)', fill: 'forwards' });
+      if (navigator.vibrate) navigator.vibrate(90);
+      rouletteTimer = setTimeout(clickUp, 550);
+    }
+
+    // phase D: one more click! → LEGENDARY pop
+    function clickUp() {
+      if (fakeAnim) fakeAnim.cancel();
+      rouletteText.className = 'legendary';
+      rouletteText.textContent = 'LEGENDARY';
+      rouletteText.style.transform = '';
+      rouletteText.animate([
+        { transform: 'scale(0.3)' },
+        { transform: 'scale(1.7)', offset: 0.5 },
+        { transform: 'scale(1)'   }
+      ], { duration: 400, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      spawnSparks(16);
+      if (navigator.vibrate) navigator.vibrate([40, 40, 160]);
+      if (onLand) onLand();
+    }
+
+    fastTick();
   }
 
   chest.addEventListener('click', () => {
@@ -570,27 +617,25 @@
       chest.classList.add('shaking');
       stage.classList.add('shaking');
       circle.classList.add('active');
-      startRoulette(() => {
-        if (navigator.vibrate) navigator.vibrate(180);
-      });
+      startRoulette();
       spawnSparks(10);
       if (navigator.vibrate) navigator.vibrate([60, 40, 60, 40, 80, 40, 120]);
     }, 600);
 
-    // phase 3: escalating sparks
+    // phase 3: escalating sparks (tracking the roulette drama)
     setTimeout(() => spawnSparks(15), 1100);
     setTimeout(() => spawnSparks(18), 1500);
-    setTimeout(() => spawnSparks(24), 1800);
+    setTimeout(() => spawnSparks(22), 1900);
 
-    // phase 5 (2150ms): FREEZE FRAME — everything stops
+    // phase 5 (2450ms): FREEZE FRAME — just after LEGENDARY lands (~2150ms)
     setTimeout(() => {
       chest.classList.remove('shaking');
       stage.classList.remove('shaking');
       stage.classList.add('frozen');
       chest.classList.add('frozen');
-    }, 2150);
+    }, 2450);
 
-    // phase 6 (2450ms): BOOM — unfreeze + flash + open
+    // phase 6 (2750ms): BOOM — unfreeze + flash + open
     setTimeout(() => {
       stage.classList.remove('frozen');
       chest.classList.remove('frozen');
@@ -603,16 +648,16 @@
       rings.forEach(r => r.classList.add('fire'));
       spawnParticles(70);
       if (navigator.vibrate) navigator.vibrate(500);
-    }, 2450);
+    }, 2750);
 
-    // phase 7 (2950ms): reveal + vignette opens
+    // phase 7 (3250ms): reveal + vignette opens
     setTimeout(() => {
       chest.classList.add('hide');
       result.classList.add('show');
       stage.classList.remove('bigShake');
       vignette.classList.remove('closing');
       vignette.classList.add('open');
-    }, 2950);
+    }, 3250);
   });
 
   function spawnSparks(n) {
