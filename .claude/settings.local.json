@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "Bash(base64 -w 0 \"/c/Users/skdnc/OneDrive/바탕 화면/cowork/02. 간단 웹사이트/qr.jpeg\")",
+      "Read(//tmp/**)"
     ]
   }
 }
