@@ -443,7 +443,7 @@
   /* hint */
   .hint {
     position:absolute;
-    bottom: 80px; left:50%;
+    top: calc(50% + 125px); left:50%;
     transform: translateX(-50%);
     color: #4A3424;
     font-size: 15px;
@@ -453,6 +453,7 @@
     animation: blink 0.7s steps(2) infinite;
     font-family: 'DotGothic16', monospace;
     font-weight: 900;
+    z-index: 3;
   }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
   .hint.hide { display: none; }
